@@ -35,7 +35,7 @@ public class RequestUtils {
             case ("get") -> request.get(requestBody.getString("id"));
             case ("put") -> request.put();
             //case ("post") -> request.put();
-            //case ("delete") -> request.delete(requestBody.getString("id"));
+            case ("delete") -> request.delete(requestBody.getString("id"));
             default -> throw new RequestTypeException(TypeErrorCode.WRONG_TYPE_ERROR);
         };
     }

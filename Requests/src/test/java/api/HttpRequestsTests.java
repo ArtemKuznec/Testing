@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpRequestsTests {
     private RequestUtils requestUtils;
+    final int PET_ID = 12;
 
     /**
      * Метод запускается перед выполнением тестов классе и
@@ -63,7 +64,9 @@ public class HttpRequestsTests {
     public void getPetByInvalidID(final String petId, final Integer expectedStatus) throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", petId);
-        Assert.assertEquals(requestUtils.createAndSendRequest(requestBody, MethodType.GET.getTypeString()).statusCode(), expectedStatus);
+        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.GET.getTypeString());
+        Assert.assertEquals(response.statusCode(), expectedStatus);
+        Assert.assertNotNull(response.jsonPath().getString("message"));
     }
 
     /**
@@ -94,7 +97,7 @@ public class HttpRequestsTests {
      * @throws RequestTypeException при ошибке в работе createAndSendRequest
      */
     @Test
-    public void putPetWithEmptyBodyID() throws RequestTypeException {
+    public void putPetWithEmptyBody() throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("","");
         Response response = requestUtils.createAndSendRequest(requestBody, MethodType.PUT.getTypeString());
@@ -109,8 +112,7 @@ public class HttpRequestsTests {
      * @throws RequestTypeException при ошибке в работе createAndSendRequest
      */
     @Test
-    public void putPetWithID() throws RequestTypeException {
-        final int PET_ID = 12;
+    public void putPetWithBody() throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", PET_ID);
         requestBody.put("name", "Dog");
@@ -127,6 +129,8 @@ public class HttpRequestsTests {
         );
     }
 
+
+
     /**
      * Тест выбрасывания исключения при работе метода createAndSendRequest
      * @throws RequestTypeException при ошибке в работе createAndSendRequest
@@ -137,4 +141,29 @@ public class HttpRequestsTests {
         Response response = requestUtils.createAndSendRequest(requestBody, "wrong");
     }
 
+    /**
+     * Тест метода DELETE, содержащего body с невалидным ID
+     * @param petId id животного
+     * @param expectedStatus ожидаемый статус ответа
+     * @throws RequestTypeException при ошибке в работе createAndSendRequest
+     */
+    @Test(dataProvider = "invalidIdList")
+    public void deletePetByInvalidID(final String petId, final Integer expectedStatus) throws RequestTypeException {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("id", petId);
+        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.DELETE.getTypeString());
+        Assert.assertEquals(response.statusCode(), expectedStatus);
+        Assert.assertNotNull(response.jsonPath().getString("message"));
+    }
+
+    /**
+     * Тест метода DELETE, содержащего body с валидным ID
+     * @throws RequestTypeException при ошибке в работе createAndSendRequest
+     */
+    @Test
+    public void deletePetByValidID() throws RequestTypeException {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("id", String.valueOf(PET_ID));
+        Assert.assertEquals(requestUtils.createAndSendRequest(requestBody, MethodType.DELETE.getTypeString()).statusCode(), StatusCode.SUCCSESS.getStatusCode());
+    }
 }
