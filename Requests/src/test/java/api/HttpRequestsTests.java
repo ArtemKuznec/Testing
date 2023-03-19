@@ -3,6 +3,7 @@ package api;
 import api.enums.MethodType;
 import api.enums.StatusCode;
 import api.exception.RequestTypeException;
+import api.utils.RequestUtils;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -125,4 +126,15 @@ public class HttpRequestsTests {
                 () -> Assert.assertNull(response.jsonPath().getString("message"))
         );
     }
+
+    /**
+     * Тест выбрасывания исключения при работе метода createAndSendRequest
+     * @throws RequestTypeException при ошибке в работе createAndSendRequest
+     */
+    @Test(expectedExceptions = RequestTypeException.class)
+    public void methodTypeException() throws RequestTypeException {
+        JSONObject requestBody = new JSONObject();
+        Response response = requestUtils.createAndSendRequest(requestBody, "wrong");
+    }
+
 }
