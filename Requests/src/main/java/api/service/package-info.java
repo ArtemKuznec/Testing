@@ -1,4 +1,4 @@
 /**
  * Пакет с классами-инструметами для работы с запросами http методов
  */
-package api.utils;
+package api.service;

@@ -3,7 +3,7 @@ package api;
 import api.enums.MethodType;
 import api.enums.StatusCode;
 import api.exception.RequestTypeException;
-import api.utils.RequestUtils;
+import api.service.RequestService;
 import io.restassured.response.Response;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpRequestsTests {
-    private RequestUtils requestUtils;
+    RequestService requestService;
     final int PET_ID = 12;
 
     /**
@@ -22,7 +22,7 @@ public class HttpRequestsTests {
      */
     @BeforeClass
     public void initialize() {
-        requestUtils = new RequestUtils("https://petstore.swagger.io/v2/pet/");
+        requestService = new RequestService("https://petstore.swagger.io/v2/pet/");
     }
 
     /**
@@ -64,7 +64,7 @@ public class HttpRequestsTests {
     public void getPetByInvalidID(final String petId, final Integer expectedStatus) throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", petId);
-        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.GET.getTypeString());
+        Response response = requestService.createAndSendRequest(requestBody, MethodType.GET.getTypeString());
         Assert.assertEquals(response.statusCode(), expectedStatus);
         Assert.assertNotNull(response.jsonPath().getString("message"));
     }
@@ -79,7 +79,7 @@ public class HttpRequestsTests {
     public void getPetByValidID(final String petId, final Integer expectedStatus) throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", petId);
-        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.GET.getTypeString());
+        Response response = requestService.createAndSendRequest(requestBody, MethodType.GET.getTypeString());
         assertAll(
                 () -> Assert.assertEquals(response.statusCode(), expectedStatus),
                 () -> Assert.assertEquals(response.jsonPath().getString("id"), petId),
@@ -100,7 +100,7 @@ public class HttpRequestsTests {
     public void putPetWithEmptyBody() throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("","");
-        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.PUT.getTypeString());
+        Response response = requestService.createAndSendRequest(requestBody, MethodType.PUT.getTypeString());
         assertAll(
                 () -> Assert.assertEquals(response.statusCode(), StatusCode.CLIENT_ERROR.getStatusCode()),
                 () -> Assert.assertEquals(response.jsonPath().getString("message"), "com.sun.jersey.api.MessageException")
@@ -117,7 +117,7 @@ public class HttpRequestsTests {
         requestBody.put("id", PET_ID);
         requestBody.put("name", "Dog");
         requestBody.put("status", "available");
-        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.PUT.getTypeString());
+        Response response = requestService.createAndSendRequest(requestBody, MethodType.PUT.getTypeString());
         assertAll(
                 () -> Assert.assertEquals(response.statusCode(), StatusCode.SUCCSESS.getStatusCode()),
                 () -> Assert.assertEquals(response.jsonPath().getInt("id"), PET_ID),
@@ -138,7 +138,7 @@ public class HttpRequestsTests {
     @Test(expectedExceptions = RequestTypeException.class)
     public void methodTypeException() throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
-        Response response = requestUtils.createAndSendRequest(requestBody, "wrong");
+        Response response = requestService.createAndSendRequest(requestBody, "wrong");
     }
 
     /**
@@ -151,7 +151,7 @@ public class HttpRequestsTests {
     public void deletePetByInvalidID(final String petId, final Integer expectedStatus) throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", petId);
-        Response response = requestUtils.createAndSendRequest(requestBody, MethodType.DELETE.getTypeString());
+        Response response = requestService.createAndSendRequest(requestBody, MethodType.DELETE.getTypeString());
         Assert.assertEquals(response.statusCode(), expectedStatus);
         Assert.assertNotNull(response.jsonPath().getString("message"));
     }
@@ -164,6 +164,6 @@ public class HttpRequestsTests {
     public void deletePetByValidID() throws RequestTypeException {
         JSONObject requestBody = new JSONObject();
         requestBody.put("id", String.valueOf(PET_ID));
-        Assert.assertEquals(requestUtils.createAndSendRequest(requestBody, MethodType.DELETE.getTypeString()).statusCode(), StatusCode.SUCCSESS.getStatusCode());
+        Assert.assertEquals(requestService.createAndSendRequest(requestBody, MethodType.DELETE.getTypeString()).statusCode(), StatusCode.SUCCSESS.getStatusCode());
     }
 }

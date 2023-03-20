@@ -1,4 +1,4 @@
-package api.utils;
+package api.service;
 
 import api.exception.RequestTypeException;
 import api.exception.TypeErrorCode;
@@ -10,13 +10,13 @@ import org.json.JSONObject;
 /**
  * RequestUtils - класс с методом для составления и отправки запросов
  */
-public class RequestUtils {
+public class RequestService {
 
     /**
      * Конструктор, устанавливающий базовую url строку
      * @param url url строка
      */
-    public RequestUtils(final String url) {
+    public RequestService(final String url) {
         RestAssured.baseURI = url;
     }
 
@@ -36,7 +36,7 @@ public class RequestUtils {
             case ("put") -> request.put();
             //case ("post") -> request.put();
             case ("delete") -> request.delete(requestBody.getString("id"));
-            default -> throw new RequestTypeException(TypeErrorCode.WRONG_TYPE_ERROR);
+            default -> throw new RequestTypeException(TypeErrorCode.UNSUPPORTED_TYPE_ERROR);
         };
     }
 }

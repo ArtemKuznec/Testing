@@ -7,7 +7,7 @@ public enum TypeErrorCode {
     /**
      * Описание ошибки
      */
-    WRONG_TYPE_ERROR("wrong type of http method");
+    UNSUPPORTED_TYPE_ERROR("wrong type of http method");
 
     private final String errorString;
 
