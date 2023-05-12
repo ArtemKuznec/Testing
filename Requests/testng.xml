@@ -1,0 +1,13 @@
+<suite name="My test suite">
+    <listeners>
+        <listener class-name="listener.TestListener" />
+    </listeners>
+    <test name="numbersXML">
+        <parameter name="value" value="1" />
+        <parameter name="isEven" value="false" />
+        <classes>
+            <class name="api.HttpRequestsTests"/>
+            <class name="ui.TrianglePageTests" />
+        </classes>
+    </test>
+</suite>

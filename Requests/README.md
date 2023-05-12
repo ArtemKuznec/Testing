@@ -1,10 +1,12 @@
-# Homework five
+# Homework six
 
 
 
 ## Project info
 
-Website petstore.swagger.io/v2 API-Testing project
+Project for 
+API-testing website petstore.swagger.io/v2 
+UI-testing Triangle page https://playground.learnqa.ru/puzzle/triangle
 
 ### Author
 
