@@ -4,7 +4,7 @@
 
 ## Project info
 
-Repository for testing homeworks
+Repository for testing-homeworks
 
 ### Author
 
